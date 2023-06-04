@@ -35,4 +35,5 @@ jobs:
         run: |
           npm run test -- --coverage --coverageReporters=text-lcov
           npm install -g lcov
+          sudo apt-get install lcov # Add this line to install lcov package
           genhtml -o coverage-report coverage/lcov.info
