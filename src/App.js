@@ -1,7 +1,7 @@
 import './App.css';
 import LoginForm from "./pages/login-form";
 import Products from "./pages/products/products";
-import Orders from "./pages/orders";
+import Orders from "./pages/orders/orders";
 import {Route, Routes} from "react-router";
 import Layout from "./components/common/layout";
 import {BrowserRouter} from "react-router-dom";

@@ -1,0 +1,18 @@
+
+
+.total-content {
+    padding: 16px;
+}
+
+.payment-card-title {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+}
+
+.payment-card {
+    margin: 2%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    background-color: #0077be;
+}

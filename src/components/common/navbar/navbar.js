@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-import {Badge, MenuItem} from "@mui/material";
+import {Badge} from "@mui/material";
 import {Link, useNavigate} from "react-router-dom";
 
 const drawerWidth = 240;
@@ -92,7 +92,9 @@ const Navbar = (props) => {
                         color="inherit"
                     >
                         <Badge badgeContent={17} color="error">
-                            <ShoppingCartIcon />
+                            <Link to="/orders">
+                                <ShoppingCartIcon />
+                            </Link>
                         </Badge>
                     </IconButton>
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
