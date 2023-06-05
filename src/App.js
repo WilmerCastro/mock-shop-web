@@ -1,25 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import LoginForm from "./pages/login-form";
+import Products from "./pages/products/products";
+import Orders from "./pages/orders";
+import {Route, Routes} from "react-router";
+import Layout from "./components/common/layout";
+import {BrowserRouter} from "react-router-dom";
+import NoPage from "./pages/not-found";
+import {RecoilRoot} from "recoil";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <BrowserRouter>
+          <RecoilRoot>
+              <Routes>
+                  <Route path="/" element={<Layout />}>
+                      <Route index element={<Products />} />
+                      <Route path="login" element={<LoginForm />} />
+                      <Route path="orders" element={<Orders />} />
+                      <Route path="*" element={<NoPage />} />
+                  </Route>
+              </Routes>
+          </RecoilRoot>
+      </BrowserRouter>
+  )
 }
 
 export default App;
