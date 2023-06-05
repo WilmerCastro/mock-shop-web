@@ -16,7 +16,7 @@ import Button from '@mui/material/Button';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import {Badge, MenuItem} from "@mui/material";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const drawerWidth = 240;
 const navItems = ['Login'];
@@ -24,14 +24,28 @@ const navItems = ['Login'];
 const Navbar = (props) => {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
-
+    const navigate = useNavigate();
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
     };
 
+    const handleNavigationClick = (type) => {
+        // Navigate to a specific route
+        switch (type) {
+            case 'login':
+                navigate("/login");
+                break;
+
+            case 'products':
+                navigate("/");
+                break;
+
+        }
+    };
+
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-            <Typography variant="h6" sx={{ my: 2 }}>
+            <Typography variant="h6" sx={{ my: 2 }} >
                 MOCK SHOP
             </Typography>
             <Divider />
@@ -67,10 +81,9 @@ const Navbar = (props) => {
                             variant="h6"
                             component="div"
                             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                            onClick={() => handleNavigationClick('products')}
                         >
-                            <Link to="/">
                                 MOCK SHOP
-                            </Link>
                         </Typography>
 
                     <IconButton
@@ -84,11 +97,11 @@ const Navbar = (props) => {
                     </IconButton>
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         {navItems.map((item) => (
-                            <Link to="/login">
-                                <Button key={item} sx={{ color: '#000000' }}>
+                            // <Link to="/login">
+                                <Button onClick={() => handleNavigationClick('login')} key={item} sx={{ color: '#000000' }}>
                                     {item}
                                 </Button>
-                            </Link>
+                            // </Link>
 
                         ))}
                     </Box>

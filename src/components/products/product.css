@@ -8,6 +8,10 @@
     height: inherit;
 }
 
+.product-image:hover {
+    cursor: pointer;
+}
+
 .product-category {
     font-size: 14px;
     color: #8f8f8f;
@@ -21,6 +25,11 @@
 
 .product-name {
     height: 20px;
+}
+
+.product-name:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .product-price {
