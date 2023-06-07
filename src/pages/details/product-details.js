@@ -1,13 +1,12 @@
 import { useRecoilState } from "recoil";
 import {useEffect} from "react";
-import axios from "axios";
 import {useParams} from "react-router";
-import {productsState} from "../products/atoms/products-state.atom";
 import ProductDetail from "../../components/common/product-detail-component/product-detail.component";
+import {productDetailState} from "./atoms/product-state.atom";
+import {getOneProduct} from "../../services/product.service";
 
 const ProductDetails = () => {
-    const [product, setProduct] = useRecoilState(productsState);
-
+    const [product, setProduct] = useRecoilState(productDetailState);
 
     const { id } = useParams();
 
@@ -17,7 +16,7 @@ const ProductDetails = () => {
 
     const fetchProduct = async () => {
         try {
-            const response = await axios.get(`https://fakestoreapi.com/products/${id}`);
+            const response = await getOneProduct(id);
             setProduct(response.data);
         } catch (error) {
             console.log(error);

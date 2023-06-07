@@ -1,5 +1,5 @@
 import './App.css';
-import LoginForm from "./pages/login-form";
+import LoginForm from "./pages/login/login-form";
 import Products from "./pages/products/products";
 import Orders from "./pages/orders/orders";
 import {Route, Routes} from "react-router";
@@ -8,6 +8,7 @@ import {BrowserRouter} from "react-router-dom";
 import NoPage from "./pages/not-found";
 import {RecoilRoot} from "recoil";
 import ProductDetails from "./pages/details/product-details";
+
 
 function App() {
   return (

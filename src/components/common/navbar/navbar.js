@@ -17,16 +17,37 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import {Badge} from "@mui/material";
 import {Link, useNavigate} from "react-router-dom";
+import {useRecoilState} from "recoil";
+import {authStateAtom} from "../../../pages/login/atoms/auth-state.atom";
+import {addToCartState} from "../../products/atoms/add-to-cart.atom";
+import {useEffect} from "react";
+import {getOrdersByUser} from "../../../services/order.service";
 
 const drawerWidth = 240;
 const navItems = ['Login'];
 
 const Navbar = (props) => {
     const { window } = props;
+    const [cart, setCart] = useRecoilState(addToCartState);
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [user] = useRecoilState(authStateAtom);
     const navigate = useNavigate();
+
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, [user]);
+
+    const fetchProducts = async () => {
+        try {
+            const response = await getOrdersByUser(user?._id);
+            setCart(response?.data?.productList.length);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleNavigationClick = (type) => {
@@ -86,27 +107,28 @@ const Navbar = (props) => {
                                 MOCK SHOP
                         </Typography>
 
-                    <IconButton
-                        size="large"
-                        aria-label="show 17 new notifications"
-                        color="inherit"
-                    >
-                        <Badge badgeContent={17} color="error">
-                            <Link to="/orders">
-                                <ShoppingCartIcon />
-                            </Link>
-                        </Badge>
-                    </IconButton>
-                    <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                        {navItems.map((item) => (
-                            // <Link to="/login">
-                                <Button onClick={() => handleNavigationClick('login')} key={item} sx={{ color: '#000000' }}>
-                                    {item}
-                                </Button>
-                            // </Link>
+                    {user &&
+                        <Link to="/orders">
+                            <IconButton
+                                size="large"
+                                aria-label="show 17 new notifications"
+                                color="inherit"
+                            >
+                                <Badge badgeContent={cart} color="error">
 
-                        ))}
-                    </Box>
+                                    <ShoppingCartIcon />
+                                </Badge>
+                            </IconButton>
+                        </Link>
+                    }
+
+                    { !user &&
+                        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                            <Button onClick={() => handleNavigationClick('login')} sx={{ color: '#000000' }}>
+                                Login
+                            </Button>
+                        </Box>
+                    }
                 </Toolbar>
             </AppBar>
             <Box component="nav">

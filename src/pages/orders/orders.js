@@ -1,25 +1,44 @@
 import Product from "../../components/products/product";
 import {useRecoilState} from "recoil";
 import {useEffect} from "react";
-import axios from "axios";
-import {ordersState} from "./atoms/orders-state.atom";
+import {ordersState, totalToPayState} from "./atoms/orders-state.atom";
 import './orders.css'
 import PaymentCard from "../../components/orders/orders";
+import {authStateAtom} from "../login/atoms/auth-state.atom";
+import {getOrdersByUser} from "../../services/order.service";
 
 const Orders = () => {
     const [order, setOrder] = useRecoilState(ordersState);
+    const [totalToPay, setTotalToPay] = useRecoilState(totalToPayState);
+    const [user] = useRecoilState(authStateAtom);
 
     useEffect(() => {
-        fetchProducts();
+        calculateTotalToPay(order);
+        fetchOrders();
     }, []);
 
-    const fetchProducts = async () => {
+    const fetchOrders = async () => {
         try {
-            const response = await axios.get('https://fakestoreapi.com/products');
+            const response = await getOrdersByUser(user?._id);
             setOrder(response.data);
+            calculateTotalToPay(response.data);
+
+
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const calculateTotalToPay = (order) => {
+        let subTotal = order?.subTotal;
+        let interest = order?.interest;
+        let totalValue = order?.totalValue;
+
+        setTotalToPay({
+            subTotal,
+            interest,
+            total: totalValue
+        });
     };
 
     return (
@@ -27,12 +46,12 @@ const Orders = () => {
             <h1>My Order</h1>
             <div className="container">
                 <div className="orders-container">
-                    {order.map((product) => (
-                        <Product key={product.id} product={product} />
+                    {order?.productList?.map((product) => (
+                        <Product key={product.id} product={product} showAddToCart={false} />
                     ))}
                 </div>
                 <div className="payment-container">
-                    <PaymentCard cardholderName={"test"} cardNumber={"test"} expirationDate={"test"}/>
+                    <PaymentCard subTotal={totalToPay.subTotal} taxes={totalToPay.interest} total={totalToPay.total}/>
                 </div>
             </div>
         </div>

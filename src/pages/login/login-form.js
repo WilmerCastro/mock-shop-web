@@ -1,26 +1,49 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import LoginIcon from '@mui/icons-material/Login';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Copyright from "../components/common/copyright";
-
+import Copyright from "../../components/common/copyright";
+import {login} from "../../services/auth.service";
+import {useRecoilState} from "recoil";
+import {authStateAtom} from "./atoms/auth-state.atom";
+import {useNavigate} from "react-router-dom";
+import {Alert, Snackbar, Stack} from "@mui/material";
 
 const defaultTheme = createTheme();
 
 export default function LoginForm() {
-    const handleSubmit = (event) => {
+    const [user, setUser] = useRecoilState(authStateAtom);
+    const [openError, setOpenError] = React.useState(false);
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
+
+        const response = await login({
+            username: data.get('email'),
             password: data.get('password'),
         });
+
+        if (!response?.user) {
+            setOpenError(true);
+            return;
+        }
+        setUser(response.user);
+
+        navigate(`/`);
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenError(false);
     };
 
     return (
@@ -71,6 +94,14 @@ export default function LoginForm() {
                 </Box>
                 <Copyright sx={{ mt: 4, mb: 4 }} />
             </Container>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal:'center' }} key={'top' + 'center'} open={openError} autoHideDuration={6000} onClose={handleSnackbarClose}>
+                    <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+                        User or password incorrect
+                    </Alert>
+                </Snackbar>
+            </Stack>
         </ThemeProvider>
     );
 }
